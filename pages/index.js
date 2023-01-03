@@ -1,8 +1,11 @@
 import Image from 'next/image'
+import Link from 'next/link';
 import { supabase } from "../client";
 
 import Banner from '../components/Banner';
-import styles from '../styles/Tale.module.css'
+import styles from '../styles/Tale.module.css';
+
+import {msgTextLabel, imageLabel} from '../components/Icons';
 
 function Home(props) {
 
@@ -60,12 +63,13 @@ function Home(props) {
                     {
                         props.data.map((item, index) => {
                             return(
-                                // <Link href={`/something`}>
+                                <Link href={item.story_type == 'text' ? `/stories/text/${item.story_id}` : `/stories/image/${item.story_id}`}>
                                     <div className='grid grid-cols-1 gap-2' key={index}>
-                                            <div className='cover'>
+                                            <div className='cover relative'>
+                                                <div className='absolute top-1 right-1 z-10'>{item.story_type == 'text' ? msgTextLabel : imageLabel}</div>
                                                 <Image
                                                     className='rounded-lg'
-                                                    alt='Mountains'
+                                                    alt={item.title}
                                                     src={`https://cpuwgwurtsngqmtgsmmc.supabase.co/storage/v1/object/public/story-covers/${item.story_id}/page_0.png`}
                                                     width={'100'}
                                                     height={'100'}
@@ -74,11 +78,11 @@ function Home(props) {
                                                     // objectFit={'cover'}
                                                 />
                                             </div>
-                                            <div className='font-poppins text-sm md:text-lg'>
+                                            <div className='font-poppins text-sm md:text-md dark:text-black'>
                                                 {item.title}
                                             </div>
                                     </div>
-                                // </Link>
+                                </Link>
                             )
                         })
                     }
