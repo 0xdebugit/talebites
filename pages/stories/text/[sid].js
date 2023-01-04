@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 // import styles from '../styles/Home.module.css'
 
 // import NavBar from '../../components/navbar';
-import Progress from '../../../components/progress';
+import Progress from '../../../components/Progress';
 import { playButton, pauseButton, backwardButton, forwardButton, homeButton, sendButton } from '../../../components/Icons';
 import { supabase } from "../../../client";
 import { useState, useRef, useEffect } from 'react';
