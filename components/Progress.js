@@ -30,7 +30,6 @@ export default function Progress({childFunc, childFuncprev, childFuncnext, total
         childFuncprev.current = aniprev;
         childFuncnext.current = aninext;
         maxtime.current = totalpages * delayTime.current;
-        console.log('PRogress init');
     }, []);
 
     const aniToggle = () => {
@@ -72,25 +71,21 @@ export default function Progress({childFunc, childFuncprev, childFuncnext, total
 
     const aniPlay = (ts) => {
         if(start === undefined){
-            console.log('NEW STARTmemxxs', start);
             start = ts
         }
         
         if(startfrompast.current){
-            console.log('OLD START');
             start = ts - oldstart.current
             startfrompast.current = false;
         }        
 
         if(minusone.current){
-            console.log('MIUSSS 1 triggered')
             start = ts - (currentPage.current * delayTime.current);
             minitimer.current = currentPage.current * delayTime.current;
             minusone.current = false;
         }
 
         if(plusone.current){
-            console.log('PLUSSSSSSx 1 triggered')
             start = ts - (currentPage.current * delayTime.current);
             minitimer.current = currentPage.current * delayTime.current;
             plusone.current = false;
@@ -109,7 +104,6 @@ export default function Progress({childFunc, childFuncprev, childFuncnext, total
             if( (Math.floor(elapsed / delayTime.current) * delayTime.current) % delayTime.current == 0 && (minitimer.current != (Math.floor(elapsed / delayTime.current) * delayTime.current)) ) {
                 minitimer.current = (Math.floor(elapsed / delayTime.current) * delayTime.current);                
                 currentPage.current +=1;
-                console.log('page upgraded', currentPage.current)
             }
             aniFrame.current = window.requestAnimationFrame(aniPlay);        
         }

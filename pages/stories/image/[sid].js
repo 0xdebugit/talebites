@@ -41,7 +41,6 @@ function Home(props) {
   useEffect(() => {
     maxtime.current = props.data.length * delayTime.current;
     setTimeout(() => {
-        console.log('INIT!!');
         aniToggle();
     }, 200);
   }, []);
@@ -114,27 +113,23 @@ function Home(props) {
 
     //start when page loads
       if(start === undefined){
-          console.log('NEW START', start);
           start = ts
       }
       
     //continue from saved timestamp
       if(startfrompast.current){
-          console.log('OLD START');
           start = ts - oldstart.current
           startfrompast.current = false;
       }        
 
     //changed the elapsed time
       if(minusone.current){
-          console.log('MIUS ONE TRIGGERED')
           start = ts - (currentPage.current * delayTime.current);
           minitimer.current = currentPage.current * delayTime.current;
           minusone.current = false;
       }
 
       if(plusone.current){
-        console.log('PLUSSSS ONE TRIGGERED')
         start = ts - (currentPage.current * delayTime.current);
         minitimer.current = currentPage.current * delayTime.current;
           plusone.current = false;
@@ -173,36 +168,28 @@ function Home(props) {
 
   const navigateTo = (e, path) => {
       e.preventDefault()
-
       if (path === "/") {
         if(playing.current){
           aniToggle();
-          console.log("I clicked on the xxsxsx Page");
         }        
-        
-        // then you can: 
         router.push(path)
-      }
-      if (path === "/posts") {
-      console.log("I clicked on the Posts Page");
-      // then you can: 
-      // router.push(path)
       }
   };  
 
-  async function testWebShare() {
+  async function WebShare() {
+    let story_title = props.data[0]['content'];
+    let story_id = props.data[0]['story_id'];
+    let sharableLink = router.pathname.replace('[sid]', story_id);
 
-    let sharableLink = router.pathname;
-    console.log(sharableLink);
     const shareData = {
-      title: 'Read this Story',
-      text: 'zoom',
+      title: story_title,
+      text: `${story_title} - Read Full Story here : `,
       url: sharableLink
     }
 
     // Test compatibility
     if (navigator.share === undefined) {
-      alert('Unsupported share feature');
+      console.log('Unsupported share feature');
       return;
     }
   
@@ -210,12 +197,18 @@ function Home(props) {
     try {
       await navigator.share(shareData);
     } catch (error) {
-      alert(`Error sharing: ${error}`);
+      console.log(`Error sharing: ${error}`);
     }
   }   
 
   return(
     <div className={`${darkToggle && 'dark'} justify-center flex min-h-screen`}>
+      <Head>
+        <title>TaleBites - {props.data[0]['content']}</title>
+        <meta name="description" content={props.data[0]['content']} />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="keywords" content={props.data[0]['content'].split(' ').join(', ')}/>
+      </Head>      
       <div className='w-screen max-w-screen-md story-board relative flex flex-col justify-between md:shadow-2xl md:shadow-sky-800/50 dark:bg-gray-900'>
 
         <nav className="px-2 sm:px-4 py-2.5 dark:bg-gray-900 w-full z-20 border-b border-gray-400 flex justify-between items-center">
@@ -240,12 +233,14 @@ function Home(props) {
                 src={`https://cpuwgwurtsngqmtgsmmc.supabase.co/storage/v1/object/public/story-covers/${item.story_id}/page_${index}.png`}
                 width={'300'}
                 height={'300'}
+                // layout={'responsive'}
                 priority={true}
+                quality={50}
                 // layout={'fill'}
             />              
             return(
-            <div key={index} className={`story-page-2 font-poppins grid grid-cols-1 gap-6 min-h-max leading-relaxed text-justify text-2xl p-7 ${index == pageno ? '' : 'hidden'}`}>  
-              <div className='story-title flex justify-center'>
+            <div key={index} className={`font-poppins grid grid-cols-1 gap-6 min-h-max leading-relaxed text-justify p-7 ${index == pageno ? '' : 'hidden'}`}>  
+              <div className='story-title flex justify-center relative'>
                 {enablePicture}
               </div>            
               <div>
@@ -262,7 +257,7 @@ function Home(props) {
         {/* {currentProgress} */}
         <Progress childFunc={childFunc} childFuncprev={childFuncprev} childFuncnext={childFuncnext} totalpages={props.data.length} />
 
-        <div className="px-2 sm:px-4 py-2.5 w-full z-20 top-0 left-0">
+        <div className="px-2 sm:px-4 py-2.5 w-full z-20">
           <div className="container flex flex-wrap justify-between items-center mx-auto font-poppins">
             <div className='transition ease-in-out hover:scale-110 flex text-slate-500 items-center text-3xl dark:text-white' onClick={(e) => navigateTo(e, '/') }>
               <button>{homeButton}</button>
@@ -280,7 +275,7 @@ function Home(props) {
               </button>                            
             </div>
             
-            <div className='transition ease-in-out hover:scale-110 flex text-slate-500 items-center text-3xl dark:text-white' onClick={(e) => testWebShare()}>
+            <div className='transition ease-in-out hover:scale-110 flex text-slate-500 items-center text-3xl dark:text-white' onClick={(e) => WebShare()}>
               <button>
                 {sendButton}
               </button>

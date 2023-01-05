@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Head from 'next/head';
 import Link from 'next/link';
 import { supabase } from "../client";
 
@@ -11,11 +12,16 @@ function Home(props) {
 
   return(
     <div className='justify-center flex min-h-screen'>
-
+      <Head>
+        <title>TaleBites - Short and Sweet Reading Adventures</title>
+        <meta name="description" content="TaleBites brings you a wide selection of engaging and short immersive tales to enjoy" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="keywords" content="TaleBites, ChatGPT, Midjourney, AI Stories, Free Stories, Kids Book, Bedtime Stories, Short tales"/>
+      </Head>
         {/* <div className='absolute w-full h-full blur-xl md:bg-gradient-to-r from-cyan-500 to-blue-500'>
         </div> */}
 
-      <div className='w-screen max-w-screen-sm story-board relative md:shadow-2xl md:shadow-sky-800/50'>
+      <div className='w-screen max-w-screen-sm story-board relative md:shadow-2xl md:shadow-sky-800'>
         <Banner />
 
         <div className='min-h-max grid grid-cols-1 gap-6 p-3'>
@@ -50,6 +56,7 @@ function Home(props) {
                         // height={'300'}
                         layout={'fill'}
                         objectFit={'cover'}
+                        quality={10}
 
                     />
                 </div>
@@ -59,20 +66,20 @@ function Home(props) {
                 <div className='menu-title font-poppins text-lg md:text-2xl font-semibold'>
                     Discover
                 </div>
-                <div className={`menu-items grid grid-cols-2 gap-8 w-full overflow-y-scroll bg-gray-300 p-3 rounded-xl ${styles.book_deck}`}>
+                <div className={`menu-items grid grid-cols-2 gap-8 w-full overflow-y-scroll bg-gray-300 p-3 rounded-xl shadow-xl shadow-sky-800/50 ${styles.book_deck}`}>
                     {
                         props.data.map((item, index) => {
                             return(
-                                <Link href={item.story_type == 'text' ? `/stories/text/${item.story_id}` : `/stories/image/${item.story_id}`}>
-                                    <div className='grid grid-cols-1 gap-2' key={index}>
+                                <Link href={item.story_type == 'text' ? `/stories/text/${item.story_id}` : `/stories/image/${item.story_id}`} key={index}>
+                                    <div className='grid grid-cols-1 gap-2'>
                                             <div className='cover relative'>
                                                 <div className='absolute top-1 right-1 z-10'>{item.story_type == 'text' ? msgTextLabel : imageLabel}</div>
                                                 <Image
                                                     className='rounded-lg'
                                                     alt={item.title}
                                                     src={`https://cpuwgwurtsngqmtgsmmc.supabase.co/storage/v1/object/public/story-covers/${item.story_id}/page_0.png`}
-                                                    width={'100'}
-                                                    height={'100'}
+                                                    width={'200'}
+                                                    height={'200'}
                                                     layout={'responsive'}
                                                     quality={50}
                                                     // objectFit={'cover'}
